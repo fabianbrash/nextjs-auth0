@@ -1,8 +1,13 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import Link from 'next/link';
+import { useUser } from '@auth0/nextjs-auth0'
 
 export default function Home() {
+
+  const { user } = useUser();
+  console.log(user);
   return (
     <div className={styles.container}>
       <Head>
@@ -11,9 +16,31 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <nav className={styles.nav}>
+        {/* only show login if there is no user*/}
+
+        {!user && (
+          <Link href="/api/auth/login">
+            <a className={styles.btn}>Login</a>
+         </Link>
+        )}
+
+        {/* if there is a user, show user info and logout*/}
+
+        {user && (
+          <Link href="/api/auth/logout">
+            <a className={styles.btn}>Logout</a>
+          </Link>
+        )}
+        
+      </nav>
+
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
+          {user && (
+            user.nickname
+          )}
         </h1>
 
         <p className={styles.description}>
